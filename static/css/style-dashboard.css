@@ -1,0 +1,244 @@
+html,
+body {
+    overflow-x: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #fff7f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: linear-gradient(to right, #f7c6ce, #e3d4ff);
+    border-bottom: 4px solid #d1a0e3;
+    flex-wrap: wrap;
+}
+
+.logo-image {
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.site-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.site-title h1 {
+    font-size: 2rem;
+    margin: 0;
+    color: #4a2c52;
+}
+
+.tagline {
+    font-size: 1rem;
+    color: #a34c79;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.nav-bar {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-bar a,
+.logout-form-inline button {
+    text-decoration: none;
+    background: none;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #4a2c52;
+    transition: color 0.3s ease;
+}
+
+.nav-bar a:hover,
+.logout-form-inline button:hover {
+    color: #d45087;
+}
+
+.logout-form-inline button {
+    background-color: #f674a4;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: background 0.3s ease;
+}
+
+.logout-form-inline button:hover {
+    background-color: #d45087;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media (max-width: 768px) {
+
+    .hero-section,
+    .content-section {
+        padding: 20px 15px;
+    }
+}
+
+.hero-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 40px;
+    background-color: #fceef1;
+    border-bottom: 4px solid #f6d1e5;
+}
+
+.hero-section img {
+    width: 300px;
+    max-width: 90%;
+    border-radius: 10px;
+    margin-right: 40px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-text {
+    flex: 1;
+}
+
+.hero-text h2 {
+    color: #c25283;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Section Layout */
+.content-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #f2dfe8;
+    text-align: center;
+}
+
+.content-section img {
+    width: 300px;
+    max-width: 90%;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.content-section .text-content {
+    max-width: 75%;
+    padding: 0 15px;
+}
+
+.text-content {
+    display: flex;
+    flex: 1;
+    max-width: 600px;
+    margin: 10px;
+}
+
+.text-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #a9446c;
+}
+
+.text-content p {
+    font-size: 1rem;
+    color: #444;
+}
+
+/* Full-width section (for prevention) */
+.full-width {
+    max-width: 100%;
+    text-align: center;
+}
+
+.full-width p {
+    font-size: 1.1rem;
+    padding: 0 10%;
+}
+
+/* Footer */
+footer {
+    background-color: #f8d7e9;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.95rem;
+    color: #5a2b4c;
+}
+
+footer a {
+    color: #943c72;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .hero-section,
+    .content-section,
+    .content-section.reverse {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .nav-bar {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    .text-content,
+    .full-width {
+        padding: 0 15px;
+    }
+}
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+section,
+img,
+div {
+    max-width: 100%;
+    box-sizing: border-box;
+}
