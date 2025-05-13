@@ -43,8 +43,10 @@
             placeholder="Password"
             required
           />
-          <span class="toggle-password" onclick="togglePassword('password')"
-            >👁️</span
+          <span
+            class="toggle-password"
+            onclick="toggleLockIcon('password', this)"
+            >🔒</span
           >
         </div>
 
@@ -58,8 +60,8 @@
           />
           <span
             class="toggle-password"
-            onclick="togglePassword('confirm_password')"
-            >👁️</span
+            onclick="toggleLockIcon('confirm_password', this)"
+            >🔒</span
           >
         </div>
 

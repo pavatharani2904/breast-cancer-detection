@@ -1,8 +1,14 @@
-// Toggle password visibility
-function togglePassword(id) {
-    const field = document.getElementById(id);
-    field.type = field.type === "password" ? "text" : "password";
+function toggleLockIcon(inputId, iconElement) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        iconElement.textContent = '🔓'; // open lock
+    } else {
+        input.type = 'password';
+        iconElement.textContent = '🔒'; // closed lock
+    }
 }
+
 
 // Password strength checker
 const passwordInput = document.getElementById('password');

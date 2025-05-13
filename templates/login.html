@@ -13,6 +13,7 @@
       href="{{ url_for('static', filename='css/style-login.css') }}"
     />
   </head>
+  <script src="{{ url_for('static', filename='js/login.js') }}"></script>
   <body>
     <div class="login-container">
       <img
@@ -36,12 +37,22 @@
 
       <form method="POST">
         <input type="text" name="username" placeholder="Username" required />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
+
+        <div class="password-wrapper">
+          <input
+            type="password"
+            name="password"
+            id="login-password"
+            placeholder="Password"
+            required
+          />
+          <span
+            class="toggle-password"
+            onclick="toggleLoginPassword('login-password', this)"
+            >🔒</span
+          >
+        </div>
+
         <button type="submit">Login</button>
       </form>
 
