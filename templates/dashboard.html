@@ -35,9 +35,9 @@
       </div>
 
       <nav class="nav-bar">
-        <a href="#" onclick="loadContent('home')" class="active">Home</a>
-        <a href="#" onclick="loadContent('upload')">Upload Image</a>
-        <a href="#" onclick="loadContent('profile')">Profile</a>
+        <a href="{{ url_for('dashboard') }}" class="active">Home</a>
+        <a href="{{ url_for('upload') }}">Upload Image</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
       </nav>
     </header>
 
