@@ -6,12 +6,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# Database setup
-db_path = r'C:\Users\vikas\OneDrive\Desktop\Cancer Detection\database\users.db'
-db_folder = os.path.dirname(db_path)
+# ✅ Cross-platform database setup
+db_folder = os.path.join(os.getcwd(), 'database')
 if not os.path.exists(db_folder):
     os.makedirs(db_folder)
 
+db_path = os.path.join(db_folder, 'users.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -27,7 +27,7 @@ class User(db.Model):
 with app.app_context():
     db.create_all()
 
-# Root route redirects based on login status
+# Root route
 @app.route('/')
 def home():
     if 'user_id' in session:
@@ -35,12 +35,12 @@ def home():
     else:
         return redirect(url_for('login'))
 
-# Route to serve docs/index.html (for GitHub or public access)
+# Public route for hosted page
 @app.route('/public')
 def public_index():
     return send_from_directory('docs', 'index.html')
 
-# Signup route
+# Signup
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -48,21 +48,16 @@ def signup():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
-        # Check if passwords match
         if password != confirm_password:
             flash("Passwords do not match", 'error')
             return redirect(url_for('signup'))
 
-        # Check if user already exists
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash("Username already exists", 'error')
             return redirect(url_for('signup'))
 
-        # ✅ Hash the password using a valid method
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-
-        # Save new user
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -70,9 +65,9 @@ def signup():
         flash("Signup successful! Please log in.", 'success')
         return redirect(url_for('login'))
 
-    return render_template('sign-up.html')  # Make sure file is named correctly
+    return render_template('sign-up.html')
 
-# Login route
+# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -80,7 +75,6 @@ def login():
         password = request.form['password']
 
         user = User.query.filter_by(username=username).first()
-
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
             flash("Login successful", 'success')
@@ -91,14 +85,14 @@ def login():
 
     return render_template('login.html')
 
-# Logout route
+# Logout
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     flash("You have been logged out", 'success')
     return redirect(url_for('login'))
 
-# Dashboard route (protected)
+# Dashboard (protected)
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
