@@ -105,6 +105,14 @@ def dashboard():
 def upload():
     return render_template('upload.html')
 
+# ✅ Profile page
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        flash("Please log in to view your profile", 'error')
+        return redirect(url_for('login'))
+    return render_template('profile.html')
+
 # ✅ Start the app
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
