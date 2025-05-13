@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Breast Cancer Detection</title>
+    <title>Login - Breast Cancer Detection AI</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
@@ -15,7 +15,16 @@
   </head>
   <body>
     <div class="login-container">
-      <h2>Login</h2>
+      <img
+        src="{{ url_for('static', filename='images/breast-cancer-ai-logo.png') }}"
+        class="logo"
+        alt="Logo"
+      />
+      <h2>Welcome to AI Breast Cancer Detection</h2>
+      <p class="tagline">
+        Empowering early detection with artificial intelligence
+      </p>
+
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %}
       <ul class="flash-messages">
