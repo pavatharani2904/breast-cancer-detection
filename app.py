@@ -65,7 +65,7 @@ def signup():
         flash("Signup successful! Please log in.", 'success')
         return redirect(url_for('login'))
 
-    return render_template('sign-up.html')
+    return render_template('signup.html')
 
 # Login
 @app.route('/login', methods=['GET', 'POST'])
