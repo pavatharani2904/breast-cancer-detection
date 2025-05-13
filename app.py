@@ -17,17 +17,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# User model
+# ✅ User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
 
-# Create database tables
+# ✅ Create database tables
 with app.app_context():
     db.create_all()
 
-# Root route
+# ✅ Home route
 @app.route('/')
 def home():
     if 'user_id' in session:
@@ -35,12 +35,12 @@ def home():
     else:
         return redirect(url_for('login'))
 
-# Public route for hosted page
+# ✅ Public route for hosted page
 @app.route('/public')
 def public_index():
     return send_from_directory('docs', 'index.html')
 
-# Signup
+# ✅ Signup
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -67,7 +67,7 @@ def signup():
 
     return render_template('signup.html')
 
-# Login
+# ✅ Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -85,29 +85,26 @@ def login():
 
     return render_template('login.html')
 
-# Logout
+# ✅ Logout
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     flash("You have been logged out", 'success')
     return redirect(url_for('login'))
 
-# Dashboard (protected)
+# ✅ Dashboard (protected)
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
         flash("Please log in first", 'error')
         return redirect(url_for('login'))
     return render_template('dashboard.html')
+
+# ✅ Upload page
 @app.route('/upload', methods=['GET', 'POST'])
-
-@app.route('/')
-def home():
-    return redirect(url_for('dashboard'))
-
 def upload():
     return render_template('upload.html')
 
+# ✅ Start the app
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
-
