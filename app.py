@@ -99,6 +99,14 @@ def dashboard():
         flash("Please log in first", 'error')
         return redirect(url_for('login'))
     return render_template('dashboard.html')
+@app.route('/upload', methods=['GET', 'POST'])
+
+@app.route('/')
+def home():
+    return redirect(url_for('dashboard'))
+
+def upload():
+    return render_template('upload.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
