@@ -1,26 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
     <title>Prediction Result</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style-dashboard.css') }}"
-    />
   </head>
   <body>
-    <header class="header">
-      <h1>Prediction Result</h1>
-    </header>
+    <h2>Prediction Result:</h2>
+    <p>{{ prediction }}</p>
+    <img
+      src="{{ url_for('static', filename=image_path.split('static/')[1]) }}"
+      alt="Uploaded Image"
+      width="300"
+    />
 
-    <main>
-      <p><strong>Result:</strong> {{ prediction }}</p>
-      <img
-        src="{{ url_for('static', filename=image_path.split('static/')[1]) }}"
-        alt="Uploaded Image"
-        width="300px"
-      />
-      <br /><a href="{{ url_for('upload') }}">Upload Another</a>
-    </main>
+    <br /><br />
+    <a href="{{ url_for('upload') }}">Try Another Image</a>
   </body>
 </html>
