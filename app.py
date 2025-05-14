@@ -1,53 +1,51 @@
 import os
+from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from model import predict_combined
+from models.predictor import predict_combined
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
+# File upload config
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Ensure folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# ✅ Prediction Route
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'image' not in request.files:
-        return 'No file part'
+        flash('No image part', 'error')
+        return redirect(url_for('upload'))
 
     file = request.files['image']
     if file.filename == '':
-        return 'No selected file'
+        flash('No selected file', 'error')
+        return redirect(url_for('upload'))
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        # Run your model prediction function
-        result = predict_combined(filepath)  # Assuming you imported this
+        result = predict_combined(filepath)
+        return render_template('result.html', prediction=result, image_file=filename)
 
-        return render_template('result.html', prediction=result, image_path=filepath)
+    flash('Invalid file format', 'error')
+    return redirect(url_for('upload'))
 
-    return 'Invalid file format'
-# ✅ Cross-platform database setup
+# ✅ Database setup
 db_folder = os.path.join(os.getcwd(), 'database')
-if not os.path.exists(db_folder):
-    os.makedirs(db_folder)
-
+os.makedirs(db_folder, exist_ok=True)
 db_path = os.path.join(db_folder, 'users.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 # ✅ User model
@@ -56,24 +54,18 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
 
-# ✅ Create database tables
 with app.app_context():
     db.create_all()
 
-# ✅ Home route
+# ✅ Routes
 @app.route('/')
 def home():
-    if 'user_id' in session:
-        return redirect(url_for('dashboard'))
-    else:
-        return redirect(url_for('login'))
+    return redirect(url_for('dashboard')) if 'user_id' in session else redirect(url_for('login'))
 
-# ✅ Public route for hosted page
 @app.route('/public')
 def public_index():
     return send_from_directory('docs', 'index.html')
 
-# ✅ Signup
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -85,45 +77,36 @@ def signup():
             flash("Passwords do not match", 'error')
             return redirect(url_for('signup'))
 
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
+        if User.query.filter_by(username=username).first():
             flash("Username already exists", 'error')
             return redirect(url_for('signup'))
 
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
+        hashed = generate_password_hash(password, method='pbkdf2:sha256')
+        db.session.add(User(username=username, password=hashed))
         db.session.commit()
 
-        flash("Signup successful! Please log in.", 'success')
+        flash("Signup successful!", 'success')
         return redirect(url_for('login'))
 
     return render_template('signup.html')
 
-# ✅ Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
+        user = User.query.filter_by(username=request.form['username']).first()
+        if user and check_password_hash(user.password, request.form['password']):
             session['user_id'] = user.id
             flash("Login successful", 'success')
             return redirect(url_for('dashboard'))
-        else:
-            flash("Invalid credentials", 'error')
-            return redirect(url_for('login'))
-
+        flash("Invalid credentials", 'error')
     return render_template('login.html')
 
-# ✅ Logout
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
-    flash("You have been logged out", 'success')
+    flash("Logged out", 'success')
     return redirect(url_for('login'))
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
@@ -136,6 +119,5 @@ def upload():
 def profile():
     return render_template('profile.html')
 
-# ✅ Start the app
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+    app.run(debug=True)
