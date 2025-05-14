@@ -5,15 +5,22 @@
     <title>Prediction Result</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
+      href="{{ url_for('static', filename='css/style-dashboard.css') }}"
     />
   </head>
   <body>
-    <div class="container">
-      <h2>Prediction Result</h2>
+    <header class="header">
+      <h1>Prediction Result</h1>
+    </header>
+
+    <main>
       <p><strong>Result:</strong> {{ prediction }}</p>
-      <p><strong>Confidence:</strong> {{ confidence }}%</p>
-      <a href="/dashboard"><button>Try Another</button></a>
-    </div>
+      <img
+        src="{{ url_for('static', filename=image_path.split('static/')[1]) }}"
+        alt="Uploaded Image"
+        width="300px"
+      />
+      <br /><a href="{{ url_for('upload') }}">Upload Another</a>
+    </main>
   </body>
 </html>

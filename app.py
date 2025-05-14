@@ -2,10 +2,43 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from model import predict_combined
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Ensure folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'image' not in request.files:
+        return 'No file part'
+
+    file = request.files['image']
+    if file.filename == '':
+        return 'No selected file'
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        # Run your model prediction function
+        result = predict_combined(filepath)  # Assuming you imported this
+
+        return render_template('result.html', prediction=result, image_path=filepath)
+
+    return 'Invalid file format'
 # ✅ Cross-platform database setup
 db_folder = os.path.join(os.getcwd(), 'database')
 if not os.path.exists(db_folder):
