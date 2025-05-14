@@ -91,26 +91,16 @@ def logout():
     session.pop('user_id', None)
     flash("You have been logged out", 'success')
     return redirect(url_for('login'))
-
-# ✅ Dashboard (protected)
 @app.route('/dashboard')
 def dashboard():
-    if 'user_id' not in session:
-        flash("Please log in first", 'error')
-        return redirect(url_for('login'))
     return render_template('dashboard.html')
 
-# ✅ Upload page
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     return render_template('upload.html')
 
-# ✅ Profile page
 @app.route('/profile')
 def profile():
-    if 'user_id' not in session:
-        flash("Please log in to view your profile", 'error')
-        return redirect(url_for('login'))
     return render_template('profile.html')
 
 # ✅ Start the app

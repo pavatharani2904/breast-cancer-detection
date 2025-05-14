@@ -42,6 +42,7 @@
     </header>
 
     <main id="content-area">
+      <!-- Awareness Sections -->
       <section class="hero-section" data-aos="fade-up">
         <img
           src="{{ url_for('static', filename='docs/assets/side-view-young-woman-portrait.jpg') }}"
@@ -52,11 +53,7 @@
           <p>
             Breast cancer is treatable, especially when detected early. Learn
             about symptoms, risk factors, and preventive actions every woman
-            should know. Breast cancer is one of the most common cancers, but
-            when detected early, it can often be treated successfully. Early
-            detection through regular screenings like mammograms and self-exams
-            helps identify any changes in the breast tissue before symptoms
-            become noticeable.
+            should know...
           </p>
         </div>
       </section>
@@ -65,41 +62,27 @@
         <div class="text-content">
           <img
             src="{{ url_for('static', filename='docs/assets/breast-cancer.png') }}"
-            alt="Hero Banner"
+            alt="What is Breast Cancer"
           />
           <div>
             <h2>What is Breast Cancer?</h2>
             <p>
               Breast cancer occurs when abnormal cells in the breast begin to
-              grow uncontrollably. It typically starts in the **ducts** (which
-              carry milk to the nipple) or **lobules** (milk-producing glands).
-              Over time, these abnormal cells can form a lump or mass and may
-              spread to nearby tissues. As the cancer grows, it can invade
-              surrounding areas and eventually spread to other parts of the body
-              through the lymphatic system or bloodstream. Early detection is
-              crucial because it helps prevent the cancer from spreading and
-              allows for more effective treatment.
+              grow uncontrollably. It typically starts in the
+              <strong>ducts</strong> (which carry milk) or
+              <strong>lobules</strong> (milk-producing glands)...
             </p>
           </div>
         </div>
       </section>
 
-      <!-- Causes -->
       <section class="content-section" data-aos="fade-right">
         <div class="text-content">
           <div>
             <h2>What Causes Breast Cancer?</h2>
             <p>
-              Several factors can increase the risk of developing breast cancer.
-              Genetics, particularly mutations in the BRCA1 and BRCA2 genes, can
-              significantly raise the risk. Age is another factor, as the
-              likelihood of breast cancer increases as women get older. Hormonal
-              changes, such as early menstruation or late menopause, can also
-              play a role. Lifestyle factors, including obesity, alcohol
-              consumption, and exposure to radiation, can further increase the
-              risk. Lastly, having a family history of breast cancer can make
-              someone more likely to develop the disease, as genetic mutations
-              may be passed down through generations.
+              Several factors increase the risk: genetic mutations (BRCA1/2),
+              age, hormonal changes, family history, lifestyle habits, etc.
             </p>
           </div>
           <img
@@ -108,7 +91,7 @@
           />
         </div>
       </section>
-      <!-- Stages of Breast Cancer -->
+
       <section class="content-section reverse" data-aos="fade-left">
         <div class="text-content">
           <img
@@ -118,67 +101,44 @@
           <div>
             <h2>Stages of Breast Cancer</h2>
             <p>
-              <strong>Stage 0:</strong> Non-invasive. Abnormal cells present but
-              not yet cancerous.<br />
-              <strong>Stage I-II:</strong> Cancer is localized or in nearby
-              lymph nodes.<br />
-              <strong>Stage III:</strong> Spread to more lymph nodes or
-              tissue.<br />
-              <strong>Stage IV:</strong> Metastatic. Cancer has spread to other
-              organs.
+              <strong>Stage 0:</strong> Non-invasive<br />
+              <strong>Stage I-II:</strong> Localized<br />
+              <strong>Stage III:</strong> Spread to tissues<br />
+              <strong>Stage IV:</strong> Metastatic
             </p>
           </div>
         </div>
       </section>
 
-      <!-- Treatments -->
       <section class="content-section reverse" data-aos="fade-left">
         <div class="text-content">
           <img
             src="{{ url_for('static', filename='docs/assets/treatment.png') }}"
-            alt="Stages Banner"
+            alt="Treatment Banner"
           />
           <div>
             <h2>Treatment Options</h2>
             <p>
-              The treatment for breast cancer depends on the type of cancer and
-              its stage. For early-stage cancers, surgery is often the primary
-              treatment, where the tumor or the entire breast may be removed.
-              Chemotherapy is commonly used to target cancer cells throughout
-              the body, while radiation therapy helps to eliminate remaining
-              cancer cells after surgery. Hormonal therapy can be used for
-              cancers that are sensitive to hormones, aiming to block hormone
-              production or its effects. Additionally, targeted therapies focus
-              on specific molecules involved in cancer growth, while
-              immunotherapy helps the body’s immune system recognize and fight
-              cancer cells. The choice of treatment varies based on the cancer's
-              characteristics and the patient’s overall health.
+              Treatment includes surgery, chemotherapy, radiation, hormonal
+              therapy, targeted therapy, and immunotherapy — based on type and
+              stage.
             </p>
           </div>
         </div>
       </section>
 
-      <!-- Prevention -->
       <section class="content-section">
         <div class="text-content">
           <div>
             <h2>Can It Be Prevented?</h2>
             <p>
-              While not all breast cancers can be prevented, the risk can be
-              reduced by maintaining a healthy lifestyle. Staying active through
-              regular exercise, eating a balanced diet rich in fruits,
-              vegetables, and whole grains, and limiting alcohol intake can
-              lower the risk. Avoiding smoking and reducing exposure to harmful
-              chemicals also play a role in prevention. Additionally, regular
-              screenings, such as mammograms and self-exams, are crucial for
-              early detection, which significantly increases the chances of
-              successful treatment. Early detection helps identify cancer before
-              symptoms appear, making it easier to treat.
+              Maintain a healthy lifestyle, get regular screenings, avoid
+              smoking, exercise, and limit alcohol to reduce the risk.
             </p>
           </div>
           <img
             src="{{ url_for('static', filename='docs/assets/prevent.png') }}"
-            alt="Stages Banner"
+            alt="Prevention Banner"
           />
         </div>
       </section>
@@ -187,8 +147,8 @@
     <footer>
       <p>
         &copy; 2025 Breast Cancer Detector |
-        <a href="https://www.cancer.org" target="_blank"
-          >American Cancer Society</a
+        <a href="https://www.cancer.org" target="_blank">
+          American Cancer Society</a
         >
       </p>
     </footer>
@@ -196,26 +156,6 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
       AOS.init();
-
-      function loadContent(page) {
-        fetch(`/load/${page}`)
-          .then((res) => res.text())
-          .then((html) => {
-            document.getElementById("content-area").innerHTML = html;
-            document
-              .querySelectorAll(".nav-bar a")
-              .forEach((el) => el.classList.remove("active"));
-            const links = {
-              home: 0,
-              upload: 1,
-              profile: 2,
-            };
-            document
-              .querySelectorAll(".nav-bar a")
-              [links[page]].classList.add("active");
-            AOS.refresh();
-          });
-      }
     </script>
   </body>
 </html>

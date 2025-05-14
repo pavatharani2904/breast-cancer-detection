@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload Image - Breast Cancer Detection</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style-dashboard.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <style>
+      .nav-bar a.active {
+        color: #e91e63;
+        font-weight: bold;
+        border-bottom: 2px solid #e91e63;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div style="display: flex; align-items: center; gap: 20px">
+        <img
+          src="{{ url_for('static', filename='docs/assets/digital-art-style-illustration-breast-cancer-awareness-month.jpg') }}"
+          alt="Logo"
+          class="logo-image"
+        />
+        <div class="site-title">
+          <h1>Breast Cancer Detection</h1>
+          <p class="tagline">Hope. Health. Healing.</p>
+        </div>
+      </div>
+      <nav class="nav-bar">
+        <a href="{{ url_for('dashboard') }}">Home</a>
+        <a href="{{ url_for('upload') }}" class="active">Upload Image</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+      </nav>
+    </header>
+
+    <main id="content-area">
+      <section class="upload-section" data-aos="fade-up">
+        <h2>Upload Image for Detection</h2>
+        <form
+          method="POST"
+          action="{{ url_for('predict') }}"
+          enctype="multipart/form-data"
+        >
+          <input type="file" name="image" required />
+          <button type="submit">Analyze Image</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        &copy; 2025 Breast Cancer Detector |
+        <a href="https://www.cancer.org" target="_blank"
+          >American Cancer Society</a
+        >
+      </p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>

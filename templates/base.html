@@ -1,8 +1,9 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>User Profile - Breast Cancer Detection</title>
+    <title>{% block title %}Breast Cancer Detection{% endblock %}</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style-dashboard.css') }}"
@@ -21,11 +22,12 @@
     </style>
   </head>
   <body>
+    <!-- Shared Header -->
     <header class="header">
       <div style="display: flex; align-items: center; gap: 20px">
         <img
           src="{{ url_for('static', filename='docs/assets/digital-art-style-illustration-breast-cancer-awareness-month.jpg') }}"
-          alt="Logo"
+          alt="Breast Cancer Awareness"
           class="logo-image"
         />
         <div class="site-title">
@@ -36,21 +38,14 @@
       <nav class="nav-bar">
         <a href="{{ url_for('dashboard') }}">Home</a>
         <a href="{{ url_for('upload') }}">Upload Image</a>
-        <a href="{{ url_for('profile') }}" class="active">Profile</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
       </nav>
     </header>
 
-    <main id="content-area">
-      <section class="profile-section" data-aos="fade-up">
-        <h2>User Profile</h2>
-        <p><strong>Username:</strong> {{ session.get('username', 'Guest') }}</p>
-        <p>
-          <strong>Email:</strong> {{ session.get('email', 'Not provided') }}
-        </p>
-        <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
-      </section>
-    </main>
+    <!-- Main Content -->
+    <main id="content-area">{% block content %}{% endblock %}</main>
 
+    <!-- Footer -->
     <footer>
       <p>
         &copy; 2025 Breast Cancer Detector |
