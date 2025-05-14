@@ -1,5 +1,4 @@
 # model.py
-
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications.efficientnet import EfficientNetB0, preprocess_input
