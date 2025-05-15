@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Prediction Result</title>
     <link
       rel="stylesheet"
@@ -14,19 +14,23 @@
     />
   </head>
   <body>
-    <div class="container result-container">
-      <h2>Prediction Result</h2>
-      <div class="prediction-box">
-        <p class="prediction-text">{{ prediction }}</p>
+    <div class="result-layout">
+      <div class="image-section">
         <img
           src="{{ url_for('static', filename=image_path.split('static/')[1]) }}"
-          alt="Uploaded Ultrasound Image"
-          class="result-image"
+          alt="Ultrasound Image"
+          class="display-image"
         />
       </div>
-      <a href="{{ url_for('upload') }}" class="btn-back"
-        >Analyze Another Image</a
-      >
+      <div class="info-section">
+        <h2>Prediction Result</h2>
+        <div class="prediction-card">
+          <p class="prediction-output">{{ prediction }}</p>
+        </div>
+        <a href="{{ url_for('upload') }}" class="btn-retry"
+          >Analyze Another Image</a
+        >
+      </div>
     </div>
   </body>
 </html>

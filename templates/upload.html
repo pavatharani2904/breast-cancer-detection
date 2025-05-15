@@ -6,7 +6,7 @@
     <title>Upload Ultrasound Image</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/upload.css') }}"
+      href="{{ url_for('static', filename='css/style-upload.css') }}"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
@@ -14,23 +14,27 @@
     />
   </head>
   <body>
-    <div class="container upload-container">
-      <img
-        src="{{ url_for('static', filename='logo.png') }}"
-        alt="Logo"
-        class="logo"
-      />
-      <h2>Upload Ultrasound Image</h2>
-      <p class="tagline">Detect breast cancer early with AI-powered analysis</p>
-      <form
-        action="{{ url_for('predict') }}"
-        method="POST"
-        enctype="multipart/form-data"
-        class="upload-form"
-      >
-        <input type="file" name="image" accept="image/*" required />
-        <button type="submit">Analyze Image</button>
-      </form>
+    <div class="upload-wrapper">
+      <div class="upload-box">
+        <img
+          src="{{ url_for('static', filename='logo.jpg') }}"
+          alt="Logo"
+          class="logo"
+        />
+        <h2>Upload Ultrasound Image</h2>
+        <p class="tagline">
+          Detect breast cancer early with AI-powered analysis
+        </p>
+        <form
+          action="{{ url_for('predict') }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="upload-form"
+        >
+          <input type="file" name="image" accept="image/*" required />
+          <button type="submit">Analyze Image</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>
