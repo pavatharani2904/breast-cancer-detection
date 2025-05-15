@@ -33,3 +33,13 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
+
+venv/
+__pycache__/
+*.pyc
+*.pyd
+*.zip
+*.h5
+*.pb
+*.dll
+*.exe
