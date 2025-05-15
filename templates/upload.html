@@ -1,18 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Upload Image</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Upload Ultrasound Image</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/upload.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1>Upload Ultrasound Image</h1>
-    <form
-      action="{{ url_for('predict') }}"
-      method="POST"
-      enctype="multipart/form-data"
-    >
-      <input type="file" name="image" accept="image/*" required />
-      <br /><br />
-      <button type="submit">Analyze Image</button>
-    </form>
+    <div class="container upload-container">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Logo"
+        class="logo"
+      />
+      <h2>Upload Ultrasound Image</h2>
+      <p class="tagline">Detect breast cancer early with AI-powered analysis</p>
+      <form
+        action="{{ url_for('predict') }}"
+        method="POST"
+        enctype="multipart/form-data"
+        class="upload-form"
+      >
+        <input type="file" name="image" accept="image/*" required />
+        <button type="submit">Analyze Image</button>
+      </form>
+    </div>
   </body>
 </html>

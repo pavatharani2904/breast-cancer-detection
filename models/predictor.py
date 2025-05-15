@@ -5,29 +5,41 @@ import os
 from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.efficientnet import preprocess_input
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Only show errors
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
 
 # Load pre-trained ML models
 knn_model = joblib.load('models/knn_model.pkl')
 svm_model = joblib.load('models/svm_model.pkl')
 
-# Load EfficientNetB0 model for feature extraction
-effnet_model = EfficientNetB0(weights='imagenet', include_top=False, pooling='avg')  # output: (1280,)
+# Load EfficientNetB0 for feature extraction
+effnet_model = EfficientNetB0(weights='imagenet', include_top=False, pooling='avg')  # Output: (1, 1280)
 
-# Preprocess the input image and extract features using EfficientNet
+# Label mapping
+label_map = {
+    0: "Normal",
+    1: "Benign",
+    2: "Malignant"
+}
+
+# Extract features using EfficientNetB0
 def extract_features(img_path):
     img = image.load_img(img_path, target_size=(224, 224))
-    img_array = image.img_to_array(img)              # shape: (224, 224, 3)
-    img_array = np.expand_dims(img_array, axis=0)    # shape: (1, 224, 224, 3)
-    img_array = preprocess_input(img_array)          # Normalize using EfficientNetB0 rules
-    features = effnet_model.predict(img_array)       # shape: (1, 1280)
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = preprocess_input(img_array)
+    features = effnet_model.predict(img_array)
     return features
 
-# Combined prediction from KNN and SVM
+# Combined prediction using majority vote
 def predict_combined(image_path):
-    features = extract_features(image_path)          # shape: (1, 1280)
+    features = extract_features(image_path)
 
     knn_result = knn_model.predict(features)[0]
     svm_result = svm_model.predict(features)[0]
 
-    return f"KNN Prediction: {knn_result} | SVM Prediction: {svm_result}"
+    # Majority voting logic
+    votes = [knn_result, svm_result]
+    final_prediction = max(set(votes), key=votes.count)
+
+    return f"Final Diagnosis: {label_map[final_prediction]}"

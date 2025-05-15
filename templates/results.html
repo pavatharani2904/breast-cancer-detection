@@ -1,18 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Prediction Result</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style-results.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h2>Prediction Result:</h2>
-    <p>{{ prediction }}</p>
-    <img
-      src="{{ url_for('static', filename=image_path.split('static/')[1]) }}"
-      alt="Uploaded Image"
-      width="300"
-    />
-
-    <br /><br />
-    <a href="{{ url_for('upload') }}">Try Another Image</a>
+    <div class="container result-container">
+      <h2>Prediction Result</h2>
+      <div class="prediction-box">
+        <p class="prediction-text">{{ prediction }}</p>
+        <img
+          src="{{ url_for('static', filename=image_path.split('static/')[1]) }}"
+          alt="Uploaded Ultrasound Image"
+          class="result-image"
+        />
+      </div>
+      <a href="{{ url_for('upload') }}" class="btn-back"
+        >Analyze Another Image</a
+      >
+    </div>
   </body>
 </html>
