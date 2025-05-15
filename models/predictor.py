@@ -2,24 +2,31 @@ import cv2
 import numpy as np
 import joblib
 import os
+from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
-# Load pre-trained models (adjust the paths if needed)
+# Load pre-trained ML models
 knn_model = joblib.load('models/knn_model.pkl')
 svm_model = joblib.load('models/svm_model.pkl')
 
-# Preprocessing function for ultrasound image
-def preprocess_image(image_path):
-    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # Grayscale
-    img = cv2.resize(img, (224, 224))                   # Resize
-    img = img.flatten() / 255.0                         # Normalize
-    return np.array([img])                              # Return as batch
+# Load EfficientNetB0 model for feature extraction
+effnet_model = EfficientNetB0(weights='imagenet', include_top=False, pooling='avg')  # output: (1280,)
 
-# Combined prediction from both models
+# Preprocess the input image and extract features using EfficientNet
+def extract_features(img_path):
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_array = image.img_to_array(img)              # shape: (224, 224, 3)
+    img_array = np.expand_dims(img_array, axis=0)    # shape: (1, 224, 224, 3)
+    img_array = preprocess_input(img_array)          # Normalize using EfficientNetB0 rules
+    features = effnet_model.predict(img_array)       # shape: (1, 1280)
+    return features
+
+# Combined prediction from KNN and SVM
 def predict_combined(image_path):
-    processed = preprocess_image(image_path)
-    
-    knn_result = knn_model.predict(processed)[0]
-    svm_result = svm_model.predict(processed)[0]
+    features = extract_features(image_path)          # shape: (1, 1280)
 
-    # You can customize the way both results are shown
+    knn_result = knn_model.predict(features)[0]
+    svm_result = svm_model.predict(features)[0]
+
     return f"KNN Prediction: {knn_result} | SVM Prediction: {svm_result}"
