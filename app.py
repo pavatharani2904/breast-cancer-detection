@@ -1,6 +1,6 @@
 import os
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.predictor import predict_combined
@@ -8,63 +8,31 @@ from models.predictor import predict_combined
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# File upload config
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# ✅ Prediction Route
-@app.route('/predict', methods=['POST'])
-def predict():
-    if 'image' not in request.files:
-        flash('No image part', 'error')
-        return redirect(url_for('upload'))
-
-    file = request.files['image']
-    if file.filename == '':
-        flash('No selected file', 'error')
-        return redirect(url_for('upload'))
-
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-
-        result = predict_combined(filepath)
-        return render_template('result.html', prediction=result, image_file=filename)
-
-    flash('Invalid file format', 'error')
-    return redirect(url_for('upload'))
-
-# ✅ Database setup
-db_folder = os.path.join(os.getcwd(), 'database')
-os.makedirs(db_folder, exist_ok=True)
-db_path = os.path.join(db_folder, 'users.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.getcwd(), 'database', 'users.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
-# ✅ User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
 
 with app.app_context():
+    os.makedirs('database', exist_ok=True)
     db.create_all()
 
-# ✅ Routes
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/')
 def home():
     return redirect(url_for('dashboard')) if 'user_id' in session else redirect(url_for('login'))
-
-@app.route('/public')
-def public_index():
-    return send_from_directory('docs', 'index.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -81,11 +49,10 @@ def signup():
             flash("Username already exists", 'error')
             return redirect(url_for('signup'))
 
-        hashed = generate_password_hash(password, method='pbkdf2:sha256')
-        db.session.add(User(username=username, password=hashed))
+        hashed_password = generate_password_hash(password)
+        db.session.add(User(username=username, password=hashed_password))
         db.session.commit()
-
-        flash("Signup successful!", 'success')
+        flash("Signup successful! Please log in.", 'success')
         return redirect(url_for('login'))
 
     return render_template('signup.html')
@@ -115,9 +82,23 @@ def dashboard():
 def upload():
     return render_template('upload.html')
 
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'image' not in request.files:
+        flash('No image part', 'error')
+        return redirect(url_for('upload'))
+
+    file = request.files['image']
+    if file.filename == '' or not allowed_file(file.filename):
+        flash('Invalid file', 'error')
+        return redirect(url_for('upload'))
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(filepath)
+
+    prediction = predict_combined(filepath)
+    return render_template('result.html', prediction=prediction, image_path=filepath)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))

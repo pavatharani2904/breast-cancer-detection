@@ -1,50 +1,25 @@
-# models/predictor.py
-
+import cv2
 import numpy as np
-from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.models import Model
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
+import joblib
+import os
 
-# Dummy training data (replace with real)
-X_train = np.random.rand(50, 224, 224, 3).astype(np.float32)
-y_train = np.random.randint(0, 2, size=(50,))
+# Load pre-trained models (adjust the paths if needed)
+knn_model = joblib.load('models/knn_model.pkl')
+svm_model = joblib.load('models/svm_model.pkl')
 
-# Load feature extractor
-base_model = MobileNetV2(weights='imagenet', include_top=False, pooling='avg', input_shape=(224, 224, 3))
-feature_extractor = Model(inputs=base_model.input, outputs=base_model.output)
+# Preprocessing function for ultrasound image
+def preprocess_image(image_path):
+    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # Grayscale
+    img = cv2.resize(img, (224, 224))                   # Resize
+    img = img.flatten() / 255.0                         # Normalize
+    return np.array([img])                              # Return as batch
 
-def extract_features(images, batch_size=8):
-    images = preprocess_input(images)
-    return feature_extractor.predict(images, batch_size=batch_size, verbose=0)
-
-# Extract and train
-X_train_features = extract_features(X_train)
-knn = KNeighborsClassifier(n_neighbors=3)
-knn.fit(X_train_features, y_train)
-svm = SVC(kernel='linear')
-svm.fit(X_train_features, y_train)
-
+# Combined prediction from both models
 def predict_combined(image_path):
-    try:
-        img = image.load_img(image_path, target_size=(224, 224))
-        img_array = image.img_to_array(img).astype(np.float32)
-        img_array = np.expand_dims(img_array, axis=0)
-        img_array = preprocess_input(img_array)
+    processed = preprocess_image(image_path)
+    
+    knn_result = knn_model.predict(processed)[0]
+    svm_result = svm_model.predict(processed)[0]
 
-        features = feature_extractor.predict(img_array, verbose=0).reshape(1, -1)
-        knn_pred = knn.predict(features)[0]
-        svm_pred = svm.predict(features)[0]
-
-        if knn_pred == svm_pred:
-            final_pred = knn_pred
-            method = "KNN + SVM Agreement"
-        else:
-            final_pred = svm_pred
-            method = "Disagreement – SVM used"
-
-        label = 'Cancerous (Malignant)' if final_pred == 1 else 'Non-cancerous (Benign)'
-        return f"{label} ({method})"
-    except Exception as e:
-        return f"Prediction Error: {str(e)}"
+    # You can customize the way both results are shown
+    return f"KNN Prediction: {knn_result} | SVM Prediction: {svm_result}"

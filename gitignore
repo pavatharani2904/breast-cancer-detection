@@ -28,3 +28,8 @@ Thumbs.db
 # Virtual environment
 venv/
 env/
+
+venv/
+__pycache__/
+*.pyc
+.DS_Store
