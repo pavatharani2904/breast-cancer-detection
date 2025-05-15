@@ -1,43 +1,37 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.pyd
 *$py.class
 
-# Database
+# Virtual environments
+venv/
+env/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python cache/log files
+*.log
+*.pyc
+
+# Database files
 *.db
+
+# Flask-related cache
+instance/
+.webassets-cache
+
+# IDE/editor settings
+.vscode/
+.idea/
 
 # Environment variables or secrets
 .env
 *.env
 
-# Flask cache
-instance/
-.webassets-cache
-
-# VSCode and IDE settings
-.vscode/
-.idea/
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Virtual environment
-venv/
-env/
-
-venv/
-__pycache__/
-*.pyc
-.DS_Store
-
-venv/
-__pycache__/
-*.pyc
-*.pyd
+# Large model/data files
 *.zip
 *.h5
 *.pb
