@@ -1,0 +1,60 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyd
+*$py.class
+
+# Compiled C extensions
+*.so
+
+# Virtual environments
+venv/
+env/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python cache/log files
+*.log
+*.pyc
+
+# Database files
+*.db
+
+# Flask-related cache
+instance/
+.webassets-cache
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# Environment variables or secrets
+.env
+*.env
+
+# Large model/data files
+*.zip
+*.h5
+*.pb
+*.dll
+*.exe
+*.ckpt
+checkpoint/
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# TensorBoard logs
+logs/
+
+# Temporary or backup files
+*.tmp
+*.temp
+*.swp
+*.bak
+
+# Output/result directories
+output/
+results/
