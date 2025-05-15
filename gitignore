@@ -4,6 +4,9 @@ __pycache__/
 *.pyd
 *$py.class
 
+# Compiled C extensions
+*.so
+
 # Virtual environments
 venv/
 env/
@@ -37,3 +40,21 @@ instance/
 *.pb
 *.dll
 *.exe
+*.ckpt
+checkpoint/
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# TensorBoard logs
+logs/
+
+# Temporary or backup files
+*.tmp
+*.temp
+*.swp
+*.bak
+
+# Output/result directories
+output/
+results/
