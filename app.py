@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from models.predictor import predict_combined
+from flask import jsonify
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -60,11 +61,23 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        user = User.query.filter_by(username=request.form['username']).first()
-        if user and check_password_hash(user.password, request.form['password']):
-            session['user_id'] = user.id
-            flash("Login successful", 'success')
-            return redirect(url_for('dashboard'))
+        username = request.form['username']
+        password = request.form['password']
+        print(f"Trying login for username: {username}")  # debug print
+
+        user = User.query.filter_by(username=username).first()
+        if user:
+            print(f"User found: {user.username}")
+            if check_password_hash(user.password, password):
+                print("Password match!")
+                session['user_id'] = user.id
+                flash("Login successful", 'success')
+                return redirect(url_for('dashboard'))
+            else:
+                print("Password mismatch!")
+        else:
+            print("User not found!")
+
         flash("Invalid credentials", 'error')
     return render_template('login.html')
 
@@ -102,6 +115,12 @@ def predict():
 
     prediction = predict_combined(filepath)
     return render_template('results.html', prediction=prediction, image_path=filepath)
+
+@app.route('/retrain', methods=['POST'])
+def retrain():
+    from models.train import retrain_model  # Import your retraining logic
+    accuracy = retrain_model()
+    return jsonify({"message": "Retraining complete", "validation_accuracy": accuracy})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
