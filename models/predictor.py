@@ -5,6 +5,7 @@ import os
 from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.efficientnet import preprocess_input
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Only show errors
 
 # Load pre-trained ML models
 knn_model = joblib.load('models/knn_model.pkl')

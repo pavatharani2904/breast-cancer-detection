@@ -101,7 +101,7 @@ def predict():
     file.save(filepath)
 
     prediction = predict_combined(filepath)
-    return render_template('result.html', prediction=prediction, image_path=filepath)
+    return render_template('results.html', prediction=prediction, image_path=filepath)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
