@@ -49,9 +49,9 @@ def signup():
         if User.query.filter_by(username=username).first():
             flash("Username already exists", 'error')
             return redirect(url_for('signup'))
+        
+        db.session.add(User(username=username, password=password))
 
-        hashed_password = generate_password_hash(password)
-        db.session.add(User(username=username, password=hashed_password))
         db.session.commit()
         flash("Signup successful! Please log in.", 'success')
         return redirect(url_for('login'))
@@ -68,7 +68,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user:
             print(f"User found: {user.username}")
-            if check_password_hash(user.password, password):
+            if user.password == password:
                 print("Password match!")
                 session['user_id'] = user.id
                 flash("Login successful", 'success')
